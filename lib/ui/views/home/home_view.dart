@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
-
 
 import 'home_viewmodel.dart';
 
 class HomeView extends StackedView<HomeViewModel> {
   const HomeView({Key? key}) : super(key: key);
-
-
 
   @override
   Widget builder(
@@ -29,7 +25,8 @@ class HomeView extends StackedView<HomeViewModel> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Column(
+          child: viewModel.isBusy ? const CircularProgressIndicator(color: Colors.black,) :
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -38,15 +35,18 @@ class HomeView extends StackedView<HomeViewModel> {
                 size: 100,
                 color: Colors.black,
               ),
-              buildTextField('Real', 'R\$', viewModel.realController, viewModel.realChanged),
+              buildTextField('Real', 'R\$', viewModel.realController,
+                  viewModel.realChanged),
               const SizedBox(
                 height: 12,
               ),
-              buildTextField('Dólar', 'US\$', viewModel.dollarController, viewModel.dollarChanged),
+              buildTextField('Dólar', 'US\$', viewModel.dollarController,
+                  viewModel.dollarChanged),
               const SizedBox(
                 height: 12,
               ),
-              buildTextField('Euro', '€', viewModel.euroController, viewModel.euroChanged),
+              buildTextField(
+                  'Euro', '€', viewModel.euroController, viewModel.euroChanged),
             ],
           ),
         ),
@@ -61,14 +61,11 @@ class HomeView extends StackedView<HomeViewModel> {
       HomeViewModel();
 
   @override
-  void onViewModelReady(HomeViewModel viewModel) => SchedulerBinding.instance
-      .addPostFrameCallback((timeStamp) => viewModel.getMoney());
-
+  void onViewModelReady(HomeViewModel viewModel) => viewModel.getMoney();
 }
 
-
-
-buildTextField(String label, String prefix, TextEditingController controllerInput, Function(String) handleChanged) {
+buildTextField(String label, String prefix,
+    TextEditingController controllerInput, Function(String) handleChanged) {
   return TextField(
     controller: controllerInput,
     decoration: InputDecoration(
@@ -84,4 +81,3 @@ buildTextField(String label, String prefix, TextEditingController controllerInpu
     keyboardType: const TextInputType.numberWithOptions(decimal: true),
   );
 }
-
